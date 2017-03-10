@@ -7,7 +7,7 @@ import javax.xml.bind.DatatypeConverter
 
 @SuppressWarnings(Array("org.wartremover.warts.Any"))
 class JVMCompatibilityTest extends FreeSpec with Matchers with Checkers {
-  "Same behavior as DatatypeConverter.printHexBinary on random bytes" in {
+  "Hex.fromBytes has same behavior as DatatypeConverter.printHexBinary on random bytes" in {
     forAll { (byteArray: Array[Byte]) =>
       DatatypeConverter.printHexBinary(byteArray) === Hex.fromBytes(byteArray)
     }
