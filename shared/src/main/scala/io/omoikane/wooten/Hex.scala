@@ -8,7 +8,7 @@ object Hex extends BaseConversion {
   private val hexCharacters: String     = "0123456789ABCDEF"
   private val hexLookup: Map[Char, Int] = hexCharacters.zipWithIndex.toMap
 
-  override def fromBytes(bytes: Seq[Byte]): String =
+  def fromBytes(bytes: Seq[Byte]): String =
     bytes.flatMap((byte: Byte) => Seq(hexCharacters(byte >>> 4), hexCharacters(byte & 0x0F))).mkString
 
   @SuppressWarnings(Array("org.wartremover.warts.NoNeedForMonad"))
