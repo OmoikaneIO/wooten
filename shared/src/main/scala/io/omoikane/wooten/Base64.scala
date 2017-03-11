@@ -8,7 +8,7 @@ object Base64 extends BaseConversion {
   private val base64Characters: String     = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
   private val base64Lookup: Map[Char, Int] = base64Characters.zipWithIndex.toMap
 
-  override def fromBytes(bytes: Seq[Byte]): String = {
+  def fromBytes(bytes: Seq[Byte]): String = {
     val (characters, carry, carryBits) = bytes
       .foldLeft((Queue[Char](), 0, 0))((result: (Queue[Char], Int, Int), byte: Byte) => {
         val (characters, carry, carryBits) = result
@@ -21,14 +21,14 @@ object Base64 extends BaseConversion {
         else
           (characters :+ newCharacter, newCarry, newCarryBits)
       })
-    val unpadded          = if (carryBits === 0) characters else characters :+ base64Characters(carry << (6 - carryBits))
-    val remainder         = unpadded.length % 4
-    val paddingChars: Int = if (remainder === 0) 0 else 4 - remainder
-    (0 until paddingChars).foldLeft(unpadded)((result: Queue[Char], _: Int) => result :+ '=').mkString
+    val unpaddedCharacters = if (carryBits === 0) characters else characters :+ base64Characters(carry << (6 - carryBits))
+    val remainder          = unpaddedCharacters.length % 4
+    if (remainder === 0) unpaddedCharacters.mkString
+    else (0 until 4 - remainder).foldLeft(unpaddedCharacters)((result, _) => result :+ '=').mkString
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.Nothing", "org.wartremover.warts.NoNeedForMonad"))
-  override def toBytes(string: String): Either[ByteDeserializationError, Array[Byte]] =
+  def toBytes(string: String): Either[ByteDeserializationError, Array[Byte]] =
     string
       .replaceAll("=+$", "")
       .foldLeft[Either[ByteDeserializationError, (Queue[Byte], Int, Int)]](Right((Queue[Byte](), 0, 0)))(
