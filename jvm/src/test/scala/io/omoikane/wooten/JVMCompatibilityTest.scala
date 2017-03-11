@@ -32,5 +32,14 @@ class JVMCompatibilityTest extends FreeSpec with Matchers with Checkers {
         DatatypeConverter.printBase64Binary(byteArray) === Base64.fromBytes(byteArray)
       }
     }
+
+    "toBytes is the left inverse of printBase64Binary" in {
+      forAll { (byteArray: Array[Byte]) =>
+        Base64.toBytes(DatatypeConverter.printBase64Binary(byteArray)) match {
+          case Left(_)       => false
+          case Right(parsed) => parsed === byteArray
+        }
+      }
+    }
   }
 }
