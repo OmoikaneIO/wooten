@@ -9,7 +9,7 @@ object Hex extends BaseConversion {
   private val hexLookup: Map[Char, Int] = hexCharacters.zipWithIndex.toMap
 
   override def fromBytes(bytes: Seq[Byte]): String =
-    bytes.flatMap((byte: Byte) => Seq(hexCharacters((byte & 0xF0) >> 4), hexCharacters(byte & 0xF))).mkString
+    bytes.flatMap((byte: Byte) => Seq(hexCharacters(byte >>> 4), hexCharacters(byte & 0x0F))).mkString
 
   @SuppressWarnings(Array("org.wartremover.warts.NoNeedForMonad"))
   def toBytes(string: String): Either[ByteDeserializationError, Array[Byte]] =
