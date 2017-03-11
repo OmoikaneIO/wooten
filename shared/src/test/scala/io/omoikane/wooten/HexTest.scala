@@ -4,8 +4,6 @@ import org.scalatest._
 import org.scalacheck.Prop.forAll
 import org.scalatest.prop.Checkers
 
-import scala.util.{Left, Right}
-
 @SuppressWarnings(Array("org.wartremover.warts.Any"))
 class HexTest extends FreeSpec with Matchers with Checkers {
   "Seq(1,2,3)" in {
