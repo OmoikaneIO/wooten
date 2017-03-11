@@ -17,7 +17,7 @@ object Hex extends BaseConversion {
       Left[ByteDeserializationError, Array[Byte]](
         ByteDeserializationError(s"Input must be of even length, was of length ${string.length}"))
     else {
-      val characters: Seq[Char] = string.toList
+      val characters: Seq[Char] = string.replaceAll("^0x", "").toList
       characters
         .zip(characters.drop(1))
         .foldLeft[Either[ByteDeserializationError, Queue[Byte]]](Right[ByteDeserializationError, Queue[Byte]](Queue[Byte]()))(
