@@ -4,5 +4,5 @@ import io.omoikane.wooten.error.ByteDeserializationError
 
 trait BaseConversion {
   def fromBytes(bytes: Seq[Byte]): String
-  def toBytes(string: String): Either[ByteDeserializationError, Array[Byte]]
+  def toBytes(characterSequence: Seq[Char]): Either[ByteDeserializationError, Array[Byte]]
 }

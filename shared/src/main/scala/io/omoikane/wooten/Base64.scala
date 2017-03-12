@@ -13,9 +13,10 @@ object Base64 extends BaseConversion {
       .foldLeft((Queue[Char](), 0, 0))((result: (Queue[Char], Int, Int), byte: Byte) => {
         val (characters, carry, carryBits) = result
         val newCarryBits                   = 2 + carryBits
-        val chunk                          = byte >>> newCarryBits
+        val byteValue                      = byte & 0xFF
+        val chunk                          = byteValue >>> newCarryBits
         val newCharacter                   = base64Characters((carry << (6 - carryBits)) + chunk)
-        val newCarry                       = byte - (chunk << newCarryBits)
+        val newCarry                       = byteValue - (chunk << newCarryBits)
         if (newCarryBits === 6)
           (characters :+ newCharacter :+ base64Characters(newCarry), 0, 0)
         else
@@ -28,8 +29,8 @@ object Base64 extends BaseConversion {
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.Nothing", "org.wartremover.warts.NoNeedForMonad"))
-  def toBytes(string: String): Either[ByteDeserializationError, Array[Byte]] =
-    string
+  def toBytes(characterSequence: Seq[Char]): Either[ByteDeserializationError, Array[Byte]] =
+    characterSequence.mkString
       .replaceAll("=+$", "")
       .foldLeft[Either[ByteDeserializationError, (Queue[Byte], Int, Int)]](Right((Queue[Byte](), 0, 0)))(
         (result: Either[ByteDeserializationError, (Queue[Byte], Int, Int)], character: Char) =>

@@ -4,10 +4,10 @@ import java.nio.charset.StandardCharsets.UTF_8
 
 import io.omoikane.wooten.error.ByteDeserializationError
 import org.scalatest._
-import org.scalacheck.Prop.forAll
+import org.scalatest.prop.Checkers
 
 @SuppressWarnings(Array("org.wartremover.warts.Any"))
-class Base64Test extends FreeSpec with Matchers {
+class Base64Test extends FreeSpec with Matchers with Checkers {
   "fromBytes" - {
     "\"Man\"" in {
       Base64.fromBytes("Man".getBytes(UTF_8)) should be("TWFu")
@@ -46,7 +46,7 @@ class Base64Test extends FreeSpec with Matchers {
   }
 
   "Can serialize and deserialize random bytes" in {
-    forAll { (byteArray: Array[Byte]) =>
+    check { (byteArray: Array[Byte]) =>
       Base64.toBytes(Base64.fromBytes(byteArray)) match {
         case Left(_)         => false
         case Right(newArray) => newArray === byteArray
