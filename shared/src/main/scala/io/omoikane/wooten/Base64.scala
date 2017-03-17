@@ -35,10 +35,10 @@ object Base64 extends BaseConversion {
       .foldLeft[Either[ByteDeserializationError, (Queue[Byte], Int, Int)]](Right((Queue[Byte](), 0, 0)))(
         (result: Either[ByteDeserializationError, (Queue[Byte], Int, Int)], character: Char) =>
           for {
+            resultValues <- result
             data <- base64Lookup
               .get(character)
-              .toRight(ByteDeserializationError(s"'$character' is not a valid base 64 character"))
-            resultValues <- result
+              .toRight(ByteDeserializationError(s"'$character' is not a valid Base64 character"))
             (bytes, carry, carryBits) = resultValues
           } yield
             if (carryBits === 0)
